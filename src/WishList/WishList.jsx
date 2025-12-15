@@ -1,25 +1,27 @@
+import WishItem from "./WishItem";
 
-function WishList({wishes}) {
+function WishList({ wishes, setWishes }) {
+  function onCompletedChange(checked, wishId) {
+    const tempWishes = [...wishes];
+    const changedWish = tempWishes.filter((wish) => wish.id == wishId)[0];
+    changedWish.completed = checked;
+    console.log(tempWishes);
+    setWishes(tempWishes);
+  }
+
   return (
     <ul className="wish-list">
-          {wishes.map(wish => (
-          <li key={wish.id} 
-            className={`wish-list__item} 
-              ${wish.completed && 'wish-list__item--done'}
-            `}>
-
-            <input 
-              type="checkbox" 
-              checked={wish.completed} 
-              id={wish.id}
-             />
-
-            <label htmlFor={wish.id}> {wish.text} </label>
-
-          </li>
-          ))}
-        </ul>
-  )
+      {wishes.map((wish) => (
+        <WishItem
+          key={wish.id}
+          wish={wish}
+          onCompletedChange={(checked) => {
+            onCompletedChange(checked, wish.id);
+          }}
+        />
+      ))}
+    </ul>
+  );
 }
 
-export default WishList
+export default WishList;
