@@ -1,22 +1,36 @@
 import { useState, useEffect } from "react";
 
 function WishItem({ wish, onCompletedChange }) {
+  const [age, setAge] = useState(0);
 
-    const [age, setAge] = useState(0);
+  useEffect(() => {
+    // Capture the value of wish.completed at this moment
+    const completedValue = wish.completed;
+    console.log("effect", completedValue);
 
-    useEffect(() => {
-        //efunction body executed every time the porp wish.completed of the component changes
-        let ageInterval;
+    // Variable for the interval; belongs to THIS effect execution
+    let ageInterval;
 
-        if (wish.completed) {
-            clearInterval(ageInterval);
-        } else {
-            ageInterval = setInterval(() => {
-                setAge((currentAge) => currentAge + 1);
-            }, 1000);
-        }
-        return () => clearInterval(ageInterval);
-    }, [wish.completed]);
+    // If the wish is not completed, start an interval to increase age
+    if (!completedValue) {
+      ageInterval = setInterval(() => {
+        setAge((currentAge) => currentAge + 1); // functional update
+      }, 1000);
+    }
+
+    // Cleanup runs when:
+    // 1. The component unmounts
+    // 2. OR wish.completed changes (before the next effect)
+    return () => {
+      console.log("cleanup", completedValue);
+
+      // Only stop the interval and reset age if we were counting
+      if (!completedValue) {
+        clearInterval(ageInterval); // stop the timer
+        setAge(0); // reset age because counting stopped
+      }
+    };
+  }, [wish.completed]); // Re-run the effect every time wish.completed changes
 
   return (
     <li

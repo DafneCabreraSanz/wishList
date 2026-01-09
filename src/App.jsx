@@ -34,7 +34,7 @@ function App() {
       <h1>My Wishlist</h1>
       <WishInput onNewWish={onNewWish} />
       <WishList wishes={wishes} setWishes={setWishes} />
-      <button type="button">Archive all wishes</button>
+      <button type="button" onClick={() => setWishes([])}>Archive all whishes</button>
     </div>
   );
 }
